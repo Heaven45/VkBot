@@ -10,6 +10,6 @@
 pip install vk_api
 ```
 5. Import the project
-6. Open tiktoken.py
+6. Open data.py
 7. Paste your api key in main_token variable
 8. Run your project
