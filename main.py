@@ -1,6 +1,8 @@
 import vk_api
 import json
+import random
 from vk_api.longpoll import VkLongPoll, VkEventType
+from vk_api.utils import get_random_id
 from data import *
 
 vk_session = vk_api.VkApi(token=main_token)
@@ -31,7 +33,7 @@ keyboard = str(keyboard.decode('utf-8'))
 
 
 def sender(id, text):
-    vk.messages.send(user_id=id, message=text, random_id=0, keyboard=keyboard)
+    vk.messages.send(user_id=id, message=text, random_id=get_random_id(), keyboard=keyboard)
 
 
 def send_sticker(id, number):
@@ -42,6 +44,32 @@ def send_photo(id, text, url):
     vk.messages.send(user_id=id, message=text, attachment=url, random_id=0)
 
 
+def greet():
+    greetings_list = [
+        "Привет",
+        "Hi",
+        "Здарова",
+        "Bonjour!",
+        "Хай"
+    ]
+
+    greetings_message = greetings_list[random.randint(0, len(greetings_list) - 1)]
+    sender(id, greetings_message)
+    send_sticker(id, 8472)
+
+
+def beta_report_decision():
+    statuses = [
+        "Неактуален",
+        "Не будет исправлен",
+        "Требует корректировки",
+        "Невоспроизводится",
+        "Готов к тестированию"
+    ]
+
+    verdict_message = statuses[random.randint(0, len(statuses) - 1)]
+    sender(id, verdict_message)
+
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
@@ -50,11 +78,10 @@ for event in longpoll.listen():
             id = event.user_id
 
             if msg == 'привет':
-                sender(id, 'Привет')
-                send_sticker(id, 18683)
+                greet()
             elif msg == 'стикер':
                 send_sticker(id, 19418)
-            elif msg == 'фото':
+            elif msg == 'фото?':
                 send_photo(id, '', 'photo-203492759_457239018')
             elif msg == 'бот 1':
                 sender(id, '641688889')
@@ -70,4 +97,9 @@ for event in longpoll.listen():
                 sender(id, revoke_list)
             elif msg == 'дать доступ':
                 sender(id, grant_list)
+            elif msg == 'какой статус поставить репорту':
+                beta_report_decision()
+            else:
+                sender(id, 'Я вас не понял')
+
 
