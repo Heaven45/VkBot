@@ -45,13 +45,6 @@ def send_photo(id, text, url):
 
 
 def greet():
-    greetings_list = [
-        "Привет",
-        "Hi",
-        "Здарова",
-        "Bonjour!",
-        "Хай"
-    ]
 
     greetings_message = greetings_list[random.randint(0, len(greetings_list) - 1)]
     sender(id, greetings_message)
@@ -59,13 +52,6 @@ def greet():
 
 
 def beta_report_decision():
-    statuses = [
-        "Неактуален",
-        "Не будет исправлен",
-        "Требует корректировки",
-        "Невоспроизводится",
-        "Готов к тестированию"
-    ]
 
     verdict_message = statuses[random.randint(0, len(statuses) - 1)]
     sender(id, verdict_message)
@@ -97,8 +83,12 @@ for event in longpoll.listen():
                 sender(id, revoke_list)
             elif msg == 'дать доступ':
                 sender(id, grant_list)
-            elif msg == 'какой статус поставить репорту':
+            elif msg == 'спасибо':
+                sender(id, 'Пожалуйста')
+            elif msg == 'какой статус поставить репорту?':
                 beta_report_decision()
+            elif msg == 'переговорки':
+                sender(id, meeting_rooms)
             else:
                 sender(id, 'Я вас не понял')
 
