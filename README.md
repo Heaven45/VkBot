@@ -1,5 +1,7 @@
 # VkBot
 
+VkBot is a simple bot template to get started vk platform
+
 ## Steps to start
 
 1. Create vk group
