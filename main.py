@@ -1,6 +1,7 @@
 import vk_api
 import json
 import random
+import webbrowser
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.utils import get_random_id
 from data import *
@@ -21,13 +22,26 @@ def get_button(text, color):
     }
 
 
+def get_link_button():
+    return {
+        "action": {
+            "type": "open_link",
+            "link": "https://vk.com/id1",
+            "label": "Ссылка",
+            "payload": ""
+        },
+    }
+
+
 keyboard = {
     "one_time": False,
     "buttons": [
         [get_button('Забрать доступ', 'secondary'), get_button('Дать доступ', 'secondary')],
-        [get_button('Краши мейн', 'secondary'), get_button('Краши бот 1', 'secondary'), get_button('Краши бот 2', 'secondary')]
+        [get_button('Краши мейн', 'secondary'), get_button('Краши бот 1', 'secondary'),
+         get_button('Краши бот 2', 'secondary')], [get_link_button()]
     ]
 }
+
 keyboard = json.dumps(keyboard, ensure_ascii=False).encode('utf-8')
 keyboard = str(keyboard.decode('utf-8'))
 
@@ -45,16 +59,19 @@ def send_photo(id, text, url):
 
 
 def greet():
-
     greetings_message = greetings_list[random.randint(0, len(greetings_list) - 1)]
     sender(id, greetings_message)
     send_sticker(id, 8472)
 
 
 def beta_report_decision():
-
     verdict_message = statuses[random.randint(0, len(statuses) - 1)]
     sender(id, verdict_message)
+
+
+def openBrowser(url):
+    webbrowser.open(url)
+
 
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
@@ -74,11 +91,11 @@ for event in longpoll.listen():
             elif msg == 'бот 2':
                 sender(id, '641688892')
             elif msg == 'краши мейн':
-                sender(id, main_crushes)
+                openBrowser(main_crushes)
             elif msg == 'краши бот 1':
-                sender(id, bot1_crushes)
+                openBrowser(bot1_crushes)
             elif msg == 'краши бот 2':
-                sender(id, bot2_crushes)
+                openBrowser(bot2_crushes)
             elif msg == 'забрать доступ':
                 sender(id, revoke_list)
             elif msg == 'дать доступ':
@@ -89,7 +106,7 @@ for event in longpoll.listen():
                 beta_report_decision()
             elif msg == 'переговорки':
                 sender(id, meeting_rooms)
+            elif msg == 'открой':
+                openBrowser()
             else:
                 sender(id, 'Я вас не понял')
-
-
